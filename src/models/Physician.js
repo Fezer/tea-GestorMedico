@@ -4,7 +4,6 @@ class Physician extends Sequelize.Model{
     static init(sequelize){
         super.init(
             {
-                id: Sequelize.INTEGER,
                 name: Sequelize.STRING,
                 email: Sequelize.STRING,
                 password: Sequelize.STRING
