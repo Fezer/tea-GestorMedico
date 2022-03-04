@@ -1,4 +1,7 @@
-const express = require('express');
-const phisitianRouter = express.Router;
+const express = require("express");
+const physitianRouter = express.Router();
+const physicianController = require("../controllers/physicianController");
 
-module.exports = phisitianRouter;
+physitianRouter.get("/listPhysicians", physicianController.listAllPhysician);
+
+module.exports = physitianRouter;

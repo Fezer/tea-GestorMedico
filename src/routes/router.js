@@ -1,7 +1,7 @@
 const express = require("express");
 const appointmentRouter = require('./appointmentRouter.js')
 const pacientRouter = require('./patientRouter')
-const physicianRouter = require('./physicianRouter.js')
+const physicianRouter = require('./physicianRouter')
 const router = express.Router();
 
 router.get('/', (req, res)=>{
