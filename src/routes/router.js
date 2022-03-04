@@ -1,8 +1,8 @@
 const express = require("express");
 const appointmentRouter = require('./appointmentRouter.js')
-const pacientRouter = require('./pacientRouter.js')
+const pacientRouter = require('./patientRouter')
 const physicianRouter = require('./physicianRouter.js')
-const routes = express.Router();
+const router = express.Router();
 
 router.get('/', (req, res)=>{
     res.send('Its working');
