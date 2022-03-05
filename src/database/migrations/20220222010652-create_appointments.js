@@ -29,7 +29,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      createAt: {
+      createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
@@ -43,6 +43,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTablle("Appointments");
+    await queryInterface.dropTable("Appointments");
   },
 };
