@@ -6,7 +6,7 @@ class Patient extends Sequelize.Model{
             {
                 name: Sequelize.STRING,
                 email: Sequelize.STRING,
-                phone: Sequelize.STRING
+                phone: Sequelize.STRING,
             },
             {
                 sequelize,
