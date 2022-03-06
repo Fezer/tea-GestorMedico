@@ -5,15 +5,38 @@ const sequelize = require("sequelize");
 
 module.exports = {
 
+
+    async listAllAppointments(req, res){
+        const appointments = await Appointment.findAll({
+            order: [["appointmentDate", "ASC"]],
+        }).catch((error) => {
+            return res.status(500).json({ msg: "Erro de conexão" });
+        });
+        if(!appointments){
+            return res.status(404).json({ msg: "Não há consultas para listar" });
+        }else{
+            return res.status(200).json({ appointments });
+        }
+    },
+
+
     // Regra de negócio: todas as consultas possuem duração de 30 minutos.
     async newAppoitment(req, res){
-        const patientId = req.patientId;
-        const physicianId = req.physicianId;
-        const appointmentDate = req.appointmentDate;
-        const description = req.description;
+        const physicianId = req.body.physicianId;
+        const patientId = req.body.patientId;
+        const date = req.body.date;
+        const time = req.body.time;
+        const description = req.body.description;
+
+        const appointmentDate = date + " " + time;
+
+        console.log(physicianId);
+        console.log(patientId);
+        console.log(appointmentDate);
+        console.log(description);
 
         //Regra de negócio: não é obrigatório que exista desription para a consulta.
-        if(!patientId || !physicianId || !appointmentDate){
+        if(!physicianId || !patientId || !appointmentDate){
             return res.status(400).json({ msg: "Campos obrigatórios não informados." });
         }
         const patient = await Patient.findByPk(patientId).catch((error) => {
@@ -36,7 +59,8 @@ module.exports = {
                         [Op.and]: [
                             { patientId },
                             { 
-                                appointmentDate: { [Op.between]: [ (appointmentDate - 29*60000), (appointmentDate + 29*60000) ] } 
+                                // appointmentDate: { [Op.between]: [ (appointmentDate - 29*60000), (appointmentDate + 29*60000) ] } 
+                                appointmentDate: { [Op.between]: [ (appointmentDate), (appointmentDate) ] } 
                             }
                         ] 
                     },
@@ -44,7 +68,8 @@ module.exports = {
                         [Op.and]: [
                             { physicianId },
                             { 
-                                appointmentDate: { [Op.between]: [ (appointmentDate - 29*60000), (appointmentDate + 29*60000) ] }
+                                // appointmentDate: { [Op.between]: [ (appointmentDate - 29*60000), (appointmentDate + 29*60000) ] }
+                                appointmentDate: { [Op.between]: [ (appointmentDate), (appointmentDate) ] }
                             }
                         ]
                     }

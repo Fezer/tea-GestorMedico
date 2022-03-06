@@ -1,0 +1,14 @@
+GET http://localhost:3000/ HTTP/1.1
+
+###
+POST http://localhost:3000/appointment/newAppoitment HTTP/1.1
+content-type: application/json
+
+{
+    "physicianId": "1",
+    "patientId": "1",
+    "date": "2022-03-05",
+    "time": "12:30:30",
+    "description": ""
+}
+
