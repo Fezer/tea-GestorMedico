@@ -16,7 +16,6 @@ module.exports = {
   },
 
   async createPatient(req, res) {
-
     const { name, email, phone } = req.body;
     if(!name || !email || !phone)
       return res.status(400).json({ msg: "Dados do paciente não foram preenchidos."});
@@ -34,8 +33,6 @@ module.exports = {
         name,
         email,
         phone,
-      }).catch((error) => {
-        return res.status(500).json({ msg: "Falha na conexão." });
       });
       
       if(patient)
@@ -43,8 +40,25 @@ module.exports = {
       else
         return res.status(404).json({ msg: "Houve um erro na cadastro do paciente." });
     }
-    
   },
 
-
+  async updatePatient(req, res) {
+    const patient = req.body;
+    console.log(patient); 
+    if(!patient.id || (!patient.name && !patient.email && !patient.phone))
+      return res.status(400).json({ msg: "Dados do paciente não foram preenchidos."});
+    else {
+      const patientExists = await Patient.findByPk(patient.id).catch((error) => {
+        return res.status(500).json({ msg: "Falha na conexão." });
+      });
+      if(!patientExists)
+        return res.status(404).json({ msg: "Paciente não encontrado." });
+      else {
+        await Patient.update(patient, {
+          where: {id: patient.id},
+        });
+        return res.status(200).json({ msg: "Paciente atualizado com sucesso." });
+      }
+    }
+  },
 }
