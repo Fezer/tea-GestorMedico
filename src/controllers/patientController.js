@@ -44,7 +44,6 @@ module.exports = {
 
   async updatePatient(req, res) {
     const patient = req.body;
-    console.log(patient); 
     if(!patient.id || (!patient.name && !patient.email && !patient.phone))
       return res.status(400).json({ msg: "Dados do paciente não foram preenchidos."});
     else {
@@ -61,4 +60,36 @@ module.exports = {
       }
     }
   },
+
+  async searchPatientById(req, res) {
+    const patientId = req.body.id;
+    if (!patientId)
+      return res.status(404).json({ msg: "ID do paciente deve ser inserido." });
+
+    const patient = await Patient.findByPk(patientId).catch((error) => {
+      return res.status(500).json({ msg: "Falha na conexão." });
+    });
+    if (!patient || patient == undefined){
+      return res.status(404).json({ msg: "Não foi possivel encontrar o paciente." });
+    }else{
+      return res.status(200).json({ patient });
+    }
+  },
+
+  async searchPatientByName(req, res) {
+    const name = req.body.name;
+    if (!name)
+      return res.status(404).json({ msg: "Nome do paciente deve ser inserido." });
+
+    const patient = await Patient.findOne({
+      where: { name },
+    }).catch((error) => {
+      return res.status(500).json({ msg: "Falha na conexão." });
+    });
+    if (!patient || patient == undefined){
+      return res.status(404).json({ msg: "Não foi possivel encontrar o paciente." });
+    }else{
+      return res.status(200).json({ patient });
+    }
+  }
 }
