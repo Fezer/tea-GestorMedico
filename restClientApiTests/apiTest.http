@@ -1,0 +1,134 @@
+### //Test if server is running
+GET http://localhost:3000/ HTTP/1.1
+
+
+//Physicians API endpoint tests
+### //Physician authentication
+# @name auth
+GET {{baseUrl}}/physician/authentication HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "email": "afonso@mail.com",
+    "password": "1234567a"
+}
+
+
+### //Physician listPhysicians
+GET {{baseUrl}}/physician/listPhysicians HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+
+
+### //Physician newPhysician
+POST {{baseUrl}}/physician/newPhysician HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+Content-Type: {{contentType}}
+
+{
+    "name": "Cleiton da Fonseca",
+    "email": "cfonseca@mail.com",
+    "password": "1234567a"
+}
+
+### //Physician deletePhysician
+@idPhyDel = 4
+DELETE {{baseUrl}}/physician/deletePhysician/{{idPhyDel}} HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+
+
+### //Physician updatePhysician
+@idPhyUp = 1
+PUT {{baseUrl}}/physician/updatePhysician/{{idPhyUp}} HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+Content-Type: {{contentType}}
+
+{
+    "name": "Cleiton da Fonseca",
+    "email": "cfonseca12@mail.com"
+}
+
+
+//Patient API endpoint tests
+### //Patient listAllPatient
+GET {{baseUrl}}/patient/listPatients HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+
+
+### //Patient searchPatientById
+@idPatSearch = 1
+GET {{baseUrl}}/patient/searchPatientById/{{idPatSearch}} HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+
+
+### //Patient searchPatientByName
+GET {{baseUrl}}/patient/searchPatientByName HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+Content-Type: {{contentType}}
+
+{
+    "name": "123 de Oliveira 456"
+}
+
+
+### //Patient createPatient
+POST {{baseUrl}}/patient/createPatient HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+Content-Type: {{contentType}}
+
+{
+    "name": "123 de Oliveira 4",
+    "email": "123@mail.com",
+    "phone": "1235678"
+}
+
+
+### //Patient updatePatient
+@idPatUp = 7
+PUT {{baseUrl}}/patient/updatePatient/{{idPatUp}} HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+Content-Type: {{contentType}}
+
+{
+    "name": "123 de Oliveira 456",
+    "email": "1234@mail.com",
+    "phone": "1235678"
+}
+
+
+
+//Appointments API endpoint tests
+### //Appointment - List all appointment
+GET {{baseUrl}}/appointment/listAllAppointments HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+
+
+### //Appointment - Add new appointment
+POST {{baseUrl}}/appointment/newAppointment HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+Content-Type: application/json
+
+{
+    "physicianId": "1",
+    "patientId": "1",
+    "date": "2022-03-05",
+    "time": "12:00:00",
+    "description": ""
+}
+
+
+### //Appointment - Search appointment by patient id
+@appIdPatSearch = 1
+GET {{baseUrl}}/appointment/searchAppointmentByPatientId/{{appIdPatSearch}} HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+
+
+### //Appointment - Search appointment by physician id
+@appIdPhySearch = 1
+GET {{baseUrl}}/appointment/searchAppointmentByPhysicianId/{{appIdPhySearch}} HTTP/1.1
+x-access-token: {{auth.response.body.token}}
+
+
+### //Appointment - Delete appointment by id
+@appIdDel = 2
+DELETE {{baseUrl}}/appointment/deleteAppointment/{{appIdDel}} HTTP/1.1
+x-access-token: {{auth.response.body.token}}

@@ -9,7 +9,7 @@ module.exports = {
       return res.status(500).json({ msg: "Falha na conexão." });
     });
     if (!patients || patients == undefined){
-      return res.status(404).json({ msg: "Não foi possivel encontrar pacientes." });
+      return res.status(404).json({ msg: "Não foi possível encontrar pacientes." });
     }else{
       return res.status(200).json({ patients });
     }
@@ -43,26 +43,39 @@ module.exports = {
   },
 
   async updatePatient(req, res) {
-    const patient = req.body;
-    if(!patient.id || (!patient.name && !patient.email && !patient.phone))
+    const patientId = req.params.id
+    const patientName = req.body.name;
+    const patientEmail = req.body.email;
+    const patientPhone = req.body.phone;
+
+    if(!patientId || (!patientName && !patientEmail && !patientPhone)){
       return res.status(400).json({ msg: "Dados do paciente não foram preenchidos."});
-    else {
-      const patientExists = await Patient.findByPk(patient.id).catch((error) => {
+    }else {
+      const patientExists = await Patient.findByPk(patientId).catch((error) => {
         return res.status(500).json({ msg: "Falha na conexão." });
       });
-      if(!patientExists)
+      if(!patientExists){
         return res.status(404).json({ msg: "Paciente não encontrado." });
-      else {
-        await Patient.update(patient, {
-          where: {id: patient.id},
+      }else {
+        const emailExists = await Patient.findOne({
+          where: { email: patientEmail },
         });
-        return res.status(200).json({ msg: "Paciente atualizado com sucesso." });
+        if(emailExists && emailExists.id != patientId){
+          return res.status(403).json({ msg: "Email já cadastrado." });
+        }else{
+          await Patient.update({ name: patientName, email: patientEmail, phone: patientPhone }, {
+            where: { id: patientId }
+          }).catch((error) => {
+            return res.status(500).json({msg: "Erro de conexão."});
+          });
+          return res.status(200).json({ msg: "Paciente atualizado com sucesso." });
+        } 
       }
     }
   },
 
   async searchPatientById(req, res) {
-    const patientId = req.body.id;
+    const patientId = req.params.id;
     if (!patientId)
       return res.status(404).json({ msg: "ID do paciente deve ser inserido." });
 
@@ -87,7 +100,7 @@ module.exports = {
       return res.status(500).json({ msg: "Falha na conexão." });
     });
     if (!patient || patient == undefined){
-      return res.status(404).json({ msg: "Não foi possivel encontrar o paciente." });
+      return res.status(404).json({ msg: "Não foi possível encontrar o paciente." });
     }else{
       return res.status(200).json({ patient });
     }

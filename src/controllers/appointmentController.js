@@ -5,7 +5,6 @@ const sequelize = require("sequelize");
 
 module.exports = {
 
-
     async listAllAppointments(req, res){
         const appointments = await Appointment.findAll({
             order: [["appointmentDate", "ASC"]],
